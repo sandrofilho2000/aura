@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<nav id="nav-sidebar" aria-label="{% translate 'Sidebar' %}">
+  <ul>
+    {% include 'admin/page_list.html' with page_list=page_list show_changelinks=False %}
+  </ul>
+</nav>
+

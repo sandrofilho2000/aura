@@ -1,0 +1,68 @@
+<li class="model-home module menu-item">
+    <a href="/admin/" class="text">
+        <div class="icon">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+            <path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path>
+            </svg>
+        </div>
+        <span class="text">Início</span>
+    </a>
+</li>
+<li class="model module menu-item">
+    <a href="/admin/account/user/" class="text">
+        <div class="icon">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 14V22H4C4 17.5817 7.58172 14 12 14ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM21 17H22V22H14V17H15V16C15 14.3431 16.3431 13 18 13C19.6569 13 21 14.3431 21 16V17ZM19 17V16C19 15.4477 18.5523 15 18 15C17.4477 15 17 15.4477 17 16V17H19Z"></path></svg>
+        </div>
+        <span class="text">Subcontas</span>
+    </a>
+</li>
+{% if page_list %}
+    {% for page in page_list %}
+        {% if page.active %}
+            {% if page.filtered_subpages %}
+                <li class="model-financy module menu-item has-submenu">
+                    <div class="parent-menu">
+                        <div class="icon">{{ page.icon|safe }}</div>
+                        <span class="text">{{ page.title }}</span>
+                        <div class="caret">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" height="0.7em" width="0.7rem" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text">
+                        <ul class="submenu">
+                            {% for subpage in page.filtered_subpages %}
+                                {% if subpage.active %}
+                                    <li>
+                                        <a href="{{ subpage.url }}" class="text">
+                                            <span class="text">{{ subpage.title }}</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+            {% else %}
+                <li class="model module menu-item">
+                    <a href="{{ page.url }}" class="text">
+                        <div class="icon">
+                            {{ page.icon|safe }}
+                        </div>
+                        <span class="text">{{ page.title }}</span>
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<li class="model module menu-item">
+    <a href="/admin/pages/page/" class="text">
+        <div class="icon">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M20 22H4C3.44772 22 3 21.5523 3 21V8H21V21C21 21.5523 20.5523 22 20 22ZM21 6H3V3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V6ZM7 11V15H11V11H7ZM7 17V19H17V17H7ZM13 12V14H17V12H13Z"></path></svg>
+        </div>
+        <span class="text">Páginas</span>
+    </a>
+</li>
