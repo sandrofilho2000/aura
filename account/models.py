@@ -300,7 +300,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         indexes = [
             models.Index(fields=['email']),
         ]
-
+        permissions = [
+            ("can_edit_own_account", "Pode editar apenas a própria conta"),
+        ]
+        
     def __str__(self):
         return self.username
 
@@ -332,7 +335,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         account = User.objects.filter(pk=self.pk).first()      
         if account:
-            if self.last_login == account.last_login:
+            if not account.is_superuser:
                 if not account.walletId and not self.walletId:
                     response_data = criar_conta_api(payload)
 
