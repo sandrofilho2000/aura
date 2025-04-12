@@ -90,7 +90,7 @@ class CreateBillingView(APIView):
     def post(self, request):
         try:
             data = request.data  
-
+            print("data: ", data)
             billing_id = data.get("id")
             billing = Billing.objects.get(id=billing_id)
 
@@ -121,6 +121,8 @@ class CreateBillingView(APIView):
             data['externalReference'] = str(data.get('id'))
             data.pop('paylink', None)
             data.pop('id', None)
+
+            print("request.user.groups.filter(name='Vendedores').exists(): ", request.user.groups.filter(name='Vendedores').exists())
             
             if request.user.groups.filter(name='Vendedores').exists():
                 split = {}
@@ -132,6 +134,7 @@ class CreateBillingView(APIView):
                     split["fixedValue"] = fixedValue
                     split["percentualValue"] = percentualValue
                     data['split'] = [split]
+
 
             for item in data.get("split", []):
                 item['externalReference'] = str(item.get("id"))

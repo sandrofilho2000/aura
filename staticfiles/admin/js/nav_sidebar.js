@@ -17,7 +17,6 @@
             } else {
                 navSidebarIsOpen = 'true';
             }
-            localStorage.setItem('django.admin.navSidebarIsOpen', navSidebarIsOpen);
             main.classList.toggle('shifted');
             navSidebar.setAttribute('aria-expanded', navSidebarIsOpen);
         });

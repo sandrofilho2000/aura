@@ -5,6 +5,7 @@ from django.db import transaction
 from datetime import timedelta
 from django.utils.timezone import now
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.conf import settings
 
 def get_due_date():
     return now().date() + timedelta(days=7)
@@ -26,7 +27,14 @@ class Billing(models.Model):
         blank=True,
         null=True
     )
-
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        editable=False,
+        verbose_name="Criado por",
+        related_name='created_billings'
+    )
     created_at = models.DateTimeField(verbose_name="Criado em",auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     dueDate = models.DateField("Data de vencimento", default=get_due_date)
