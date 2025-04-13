@@ -14,8 +14,13 @@ function toggleinstallmentCountField(){
   }
 }
 
+async function fetchBillOnAsaas(){
+  const asaasId = document.querySelector(".field-asaasId .readonly").innerText
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
   id_billingType.addEventListener("change", toggleinstallmentCountField)
   toggleinstallmentCountField()
+  await fetchBillOnAsaas()
 })
     

@@ -16,7 +16,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("api/admin-token/", GetJWTTokenView.as_view(), name="admin_token"),
-    path("api/create-billing", CreateBillingView.as_view(), name="create-subaccount"),
+    path("api/create-billing", CreateBillingView.as_view(), name="create-billing"),
 ]
 
 """ path("api/update-subaccount/", UpdateSubaccountView.as_view(), name="update-subaccount"),

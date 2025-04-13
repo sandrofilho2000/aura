@@ -76,8 +76,8 @@ async function create_billing(billing) {
 
 
 async function handle_default_commissions(item) {
+  debugger
   const tr_num = item.id.split("-")[1];
-  const billing_id = item.querySelector(`#id_billing-${tr_num}-billing`).value || '';
   const subaccount_id = item.querySelector(".field-subaccount select").value;
   if (!subaccount_id) return;
 

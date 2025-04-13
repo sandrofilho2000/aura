@@ -6,9 +6,42 @@ from datetime import timedelta
 from django.utils.timezone import now
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
+from django.core.exceptions import ValidationError
+import requests
+
 
 def get_due_date():
     return now().date() + timedelta(days=7)
+
+def delete_billing_from_asaas(asaasId):
+    url = f"https://api-sandbox.asaas.com/v3/payments/{asaasId}"
+
+    headers = {
+        "accept": "application/json",
+        "access_token": "$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFiMWE5OTM4LTI0YjUtNGE1YS1iMzZmLWVjOGRlZGVmMWUwMjo6JGFhY2hfNTU0NGI4NDQtMTczZC00NWUzLTliY2UtNmZhYzQ4MjA5N2M0"
+    }
+
+    response = requests.delete(url, headers=headers)
+
+    if response.status_code - 200 <= 10:
+        return {
+                    'status': response.status_code,
+                    'description': "Cobrança deletada com sucesso!"
+                }                     
+
+
+    else:
+        response_text = response.json() 
+        errors = response_text.get('errors', [])  
+
+        if errors:
+            for error in errors:
+                return {
+                    'status': 400,
+                    'description': error.get('description', 'Error')  
+                }   
+
+
 
 class PaymentMethod(models.TextChoices):
     CREDIT_CARD = "CREDIT_CARD", _("Crédito")
@@ -71,6 +104,12 @@ class Billing(models.Model):
     def __str__(self):
         return self.title
     
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return super().delete(*args, **kwargs)
+
 
 class BillingSplit(models.Model):
     subaccount = models.ForeignKey(
@@ -83,7 +122,7 @@ class BillingSplit(models.Model):
     )
     billing = models.ForeignKey( 
         Billing,
-        related_name='splits',  # <- Aqui está corrigido
+        related_name='splits', 
         on_delete=models.CASCADE,
         verbose_name=_("Link de pagamento")
     )
@@ -113,3 +152,5 @@ class BillingSplit(models.Model):
 
     def __str__(self):
         return self.subaccount.first_name if self.subaccount else "-"
+ 
+     

@@ -90,7 +90,6 @@ class CreateBillingView(APIView):
     def post(self, request):
         try:
             data = request.data  
-            print("data: ", data)
             billing_id = data.get("id")
             billing = Billing.objects.get(id=billing_id)
 
@@ -141,7 +140,6 @@ class CreateBillingView(APIView):
                 item.pop("id", None)
                 item.pop("subaccount", None)
                 
-            print("data: ", data)
             response = requests.post(url, json=data, headers=headers)
 
             if response.status_code - 200 <= 10:

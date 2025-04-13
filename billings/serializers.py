@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from billings.models import Billing, BillingSplit
+from .models import Billing, BillingSplit
 from account.models import User
 from clients.models import Client  
 
