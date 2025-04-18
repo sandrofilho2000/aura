@@ -113,14 +113,16 @@ class BillingAdmin(admin.ModelAdmin):
     )
 
 
+
     def save_model(self, request, obj, form, change):
-        if not obj.paylink:
-            super().save_model(request, obj, form, change)
-        elif not obj.pk:
+        if not obj.pk:
             obj.created_by = request.user
-            super().save_model(request, obj, form, change)    
+            super().save_model(request, obj, form, change)
         else:
-            messages.warning(request, "Você não pode salvar este modelo pois ele já possui um link de pagamento.")
+            if obj.paylink:
+                messages.warning(request, "Você não pode salvar este modelo pois ele já possui um link de pagamento.")
+            else:
+                super().save_model(request, obj, form, change)
 
 
     def delete_view(self, request, object_id, extra_context=None):

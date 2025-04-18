@@ -126,6 +126,7 @@ class CreateBillingView(APIView):
             if request.user.groups.filter(name='Vendedores').exists():
                 split = {}
                 walletId = request.user.walletId
+
                 if walletId:
                     percentualValue = float(request.user.percentualValue or 0)
                     fixedValue = float(request.user.fixedValue or 0)
