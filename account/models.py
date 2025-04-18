@@ -106,7 +106,6 @@ def criar_conta_api(payload):
     }
 
     try:
-        print("payload: ", payload)
         payload['birthDate'] = payload['birthDate'].isoformat()
         response = requests.post(url, json=payload, headers=headers)
 
@@ -214,7 +213,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             unique=True,
             validators=[validate_cpf_cnpj] 
         )    
-    birth_date = models.DateField(_('Data de Nascimento'), blank=True, null=True)
+    birth_date = models.DateField(_('Data de Nascimento'))
     
     company_type = models.CharField(
         _('Tipo da Empresa'),
