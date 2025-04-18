@@ -238,7 +238,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     province = models.CharField(_('Bairro'), max_length=100, blank=True, null=True)
     postal_code = models.CharField(_('CEP'), max_length=10, blank=True, null=True)
     
-    is_staff = models.BooleanField(_('Membro da equipe'), default=False)
+    is_staff = models.BooleanField(_('Membro da equipe'), default=True)
     is_active = models.BooleanField(_('Ativo'), default=True)
     date_joined = models.DateTimeField(_('Data de criação'), default=timezone.now)
     
