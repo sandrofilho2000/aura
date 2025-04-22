@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Profile
 from django.contrib.auth.models import Group
 from admin.models import BaseAdmin
+from django.utils.translation import gettext_lazy as _
 
 admin.site.unregister(Group)
 
@@ -11,3 +12,4 @@ class ProfileAdmin(BaseAdmin):
     search_fields = ('name', 'description')
     list_filter = ('created_at', 'updated_at')
     filter_horizontal = ('permissions',)
+

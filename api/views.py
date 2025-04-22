@@ -11,7 +11,7 @@ from billings.serializers import BillingSplitSerializer, BillingSerializer
 import json
 from django.db import IntegrityError
 from random import randint
-from django.shortcuts import get_object_or_404
+from billings.models import BillingSplit
 import requests
 from django.conf import settings
 
@@ -52,12 +52,10 @@ class SearchItemsView(View):
             serializer = BillingSplitSerializer(splits, many=True)
             return JsonResponse({"results": serializer.data, "status": 200}, safe=False)
 
-        
         else:
             return JsonResponse({"message": "App inválido", "status": 400})
 
 
-        
         if valid_fields and field not in valid_fields:
             return JsonResponse({"message": "Campo inválido", "status": 400})
 
@@ -120,12 +118,13 @@ class CreateBillingView(APIView):
             data['externalReference'] = str(data.get('id'))
             data.pop('paylink', None)
             data.pop('id', None)
-
-            print("request.user.groups.filter(name='Vendedores').exists(): ", request.user.groups.filter(name='Vendedores').exists())
             
             if request.user.groups.filter(name='Vendedores').exists():
                 split = {}
                 walletId = request.user.walletId
+
+
+
 
                 if walletId:
                     percentualValue = float(request.user.percentualValue or 0)
@@ -134,6 +133,8 @@ class CreateBillingView(APIView):
                     split["fixedValue"] = fixedValue
                     split["percentualValue"] = percentualValue
                     data['split'] = [split]
+
+
 
 
             for item in data.get("split", []):
@@ -146,6 +147,7 @@ class CreateBillingView(APIView):
             if response.status_code - 200 <= 10:
                 try:
                     res_json = response.json()
+
                 except Exception as e:
                     return Response({
                         'error': 'Erro ao interpretar resposta da API Asaas',

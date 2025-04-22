@@ -288,7 +288,6 @@ body.popup .submit-row {
     background: var(--close-button-bg);
     border-radius: 4px;
     padding: 10px 15px;
-    height: 0.9375rem;
     line-height: 0.9375rem;
     color: var(--button-fg);
 }

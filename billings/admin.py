@@ -118,10 +118,21 @@ class BillingAdmin(admin.ModelAdmin):
         if not obj.pk:
             obj.created_by = request.user
             super().save_model(request, obj, form, change)
+            if request.user.groups.filter(name='Vendedores').exists() and obj:
+                print("obj: ", obj)
+                billing_split = BillingSplit(
+                    subaccount=request.user,
+                    billing=obj,
+                    fixedValue=request.user.fixedValue,
+                    percentualValue=request.user.percentualValue,
+                )
+                billing_split.save()
+            super().save_model(request, obj, form, change)
         else:
             if obj.paylink:
                 messages.warning(request, "Você não pode salvar este modelo pois ele já possui um link de pagamento.")
             else:
+                print("request.user.pk> ", request.user.pk)
                 super().save_model(request, obj, form, change)
 
 
