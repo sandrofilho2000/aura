@@ -25,6 +25,14 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     ordering = ('email', 'username', 'date_joined')
 
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', 'birth_date'),
+        }),
+        
+    )
+
     def get_groups(self, obj):
         return ", ".join([profile.name for profile in obj.groups.all()])
     
@@ -64,3 +72,6 @@ class UserAdmin(BaseUserAdmin):
             return qs
 
         return qs.filter(pk=request.user.pk)
+    
+
+    

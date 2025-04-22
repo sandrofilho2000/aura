@@ -313,7 +313,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.first_name if self.first_name else self.email
     
-    def save(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):
+        super().clean()
         payload = {
             "companyType": self.company_type,
             "birthDate": self.birth_date,
@@ -332,8 +333,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             "complement": self.complement,
         }
 
-        account = User.objects.filter(pk=self.pk).first()      
-        if account:
+        account = User.objects.filter(pk=self.pk).first()   
+
+        if account:   
             if not account.is_superuser:
                 if not account.walletId and not self.walletId:
                     response_data = criar_conta_api(payload)
