@@ -6,7 +6,6 @@ def pages_for_sidebar(request):
     allowed_pages = []
 
     if user.is_superuser:
-        # Superuser vê tudo
         allowed_pages = all_pages
     else:
         user_permissions = user.get_all_permissions()

@@ -1,0 +1,13 @@
+ASAAS_API=$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFiMWE5OTM4LTI0YjUtNGE1YS1iMzZmLWVjOGRlZGVmMWUwMjo6JGFhY2hfNTU0NGI4NDQtMTczZC00NWUzLTliY2UtNmZhYzQ4MjA5N2M0
+WALLET_ID=def32dec-fa03-4ad5-af40-de9ae8b43888
+TIME_ZONE='America/Sao_Paulo'
+LANGUAGE_CODE='pt-br'
+SECRET_KEY=django-insecure-_+lplsqdh#z)8ep_$oty+8r8z86$%a0or(w+!8v*(q($hdx5h$
+DEBUG=True
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=neondb
+DB_USER=neondb_owner
+DB_PASSWORD=npg_eHlf6dJyj2BF
+DB_HOST=ep-tiny-heart-a4yzmnjl-pooler.us-east-1.aws.neon.tech
+DB_PORT=5432
+DB_OPTIONS=sslmode=require

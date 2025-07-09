@@ -52,7 +52,7 @@ class UserAdmin(BaseUserAdmin):
         if request.user.is_superuser:
             return super().get_readonly_fields(request, obj)
         
-        campos_restritos = ['fixedValue', 'percentualValue', 'walletId', 'last_login', 'date_joined' ,'is_active', 'is_staff', 'is_superuser']
+        campos_restritos = ['fixedValue', 'cpf_cnpj', 'username','percentualValue', 'walletId', 'last_login', 'date_joined' ,'is_active', 'is_staff', 'is_superuser']
         
         return list(set(super().get_readonly_fields(request, obj)) | set(campos_restritos))
         

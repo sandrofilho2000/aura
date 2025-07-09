@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (!billing.paylink) {
       const response = await create_billing(billing)
+      console.log("🚀 ~ response:", response)
       if(response.status === 200){
         const {paylink, asaasId} = response
         document.querySelector(".field-paylink .readonly").innerHTML = `

@@ -5,19 +5,19 @@ from django.contrib.auth.models import Permission
 
 def validate_group_name(value):
     if not value.strip():
-        raise ValidationError(_('O nome do grupo não pode estar vazio.'))
+        raise ValidationError(_('O nome do perfil não pode estar vazio.'))
 
 class ProfileManager(models.Manager):
     def create_group(self, name, description=""):
         if not name:
-            raise ValueError(_('O nome do grupo é obrigatório.'))
+            raise ValueError(_('O nome do perfil é obrigatório.'))
         group = self.model(name=name, description=description)
         group.save(using=self._db)
         return group
 
 
 class Profile(models.Model):
-    name = models.CharField(_('Nome do Grupo'), max_length=150, unique=True)
+    name = models.CharField(_('Nome do perfil'), max_length=150, unique=True)
     description = models.TextField(_('Descrição'), blank=True, default="")
     created_at = models.DateTimeField(_('Criado em'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Atualizado em'), auto_now=True)
@@ -43,8 +43,8 @@ class Profile(models.Model):
     )
 
     class Meta:
-        verbose_name = _('Grupo')
-        verbose_name_plural = _('Grupos')
+        verbose_name = _('Perfil')
+        verbose_name_plural = _('Perfis')
 
     def __str__(self):
         return self.name
