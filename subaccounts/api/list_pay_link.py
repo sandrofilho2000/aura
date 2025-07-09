@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 
 
-url = "https://api-sandbox.asaas.com/v3/paymentLinks"
+url = "https://www.asaas.com/api/v3/paymentLinks"
 
 
 headers = {

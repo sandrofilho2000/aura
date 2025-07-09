@@ -4,43 +4,52 @@ import requests
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-
 def criar_cliente_api(payload):
-    url = "https://api-sandbox.asaas.com/v3/customers"
+    print("payload: ", payload)
+    url = "https://www.asaas.com/api/v3/customers"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "access_token": settings.ASAAS_ACCESS_TOKEN  
+        "access_token": settings.ASAAS_ACCESS_TOKEN
     }
 
     try:
         response = requests.post(url, json=payload, headers=headers)
+        # Tenta processar o JSON se possível
+        try:
+            response_data = response.json()
+        except ValueError:
+            raise Exception(f"Resposta da API não é JSON: {response.text}")
 
-        if response.status_code - 200 <= 10:
+        if response.status_code in range(200, 300):
             return {
-                        'status': response.status_code,
-                        'description': "Cliente Asaas criado com sucesso!",
-                        'asaasId': response.json()['id']
-                    }                     
- 
+                'status': response.status_code,
+                'description': "Cliente Asaas criado com sucesso!",
+                'asaasId': response_data['id']
+            }
 
         else:
-            response_text = response.json() 
-            errors = response_text.get('errors', [])  
-
+            errors = response_data.get('errors', [])
             if errors:
                 for error in errors:
                     return {
-                        'status': 400,
-                        'description': error.get('description', 'Error')  
-                    }                     
+                        'status': response.status_code,
+                        'description': error.get('description', 'Erro desconhecido')
+                    }
 
+            # Se não tem "errors", mostra o corpo bruto da resposta
+            return {
+                'status': response.status_code,
+                'description': f"Erro desconhecido: {response.text}"
+            }
 
     except requests.exceptions.RequestException as e:
         raise Exception(f"Erro ao conectar com a API: {str(e)}")
 
+
+
 def atualizar_cliente_api(payload, asaasId):
-    url = f"https://api-sandbox.asaas.com/v3/customers/{asaasId}"
+    url = f"https://www.asaas.com/api/v3/customers/{asaasId}"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
@@ -73,7 +82,7 @@ def atualizar_cliente_api(payload, asaasId):
         raise Exception(f"Erro ao conectar com a API: {str(e)}")
 
 def delete_cliente_api(asaasId):
-    url = f"https://api-sandbox.asaas.com/v3/customers/{asaasId}"
+    url = f"https://www.asaas.com/api/v3/customers/{asaasId}"
     headers = {"accept": "application/json", 'access_token': settings.ASAAS_ACCESS_TOKEN }
     response = requests.delete(url, headers=headers)
     if response.status_code - 200 <= 10:

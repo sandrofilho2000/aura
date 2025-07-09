@@ -14,7 +14,7 @@ def get_due_date():
     return now().date() + timedelta(days=7)
 
 def delete_billing_from_asaas(asaasId):
-    url = f"https://api-sandbox.asaas.com/v3/payments/{asaasId}"
+    url = f"https://www.asaas.com/api/v3/payments/{asaasId}"
 
     headers = {
         "accept": "application/json",

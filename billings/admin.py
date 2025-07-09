@@ -14,7 +14,7 @@ from django.contrib import admin, messages
 
 
 def delete_billing_from_asaas(asaasId):
-    url = f"https://api-sandbox.asaas.com/v3/payments/{asaasId}"
+    url = f"https://www.asaas.com/api/v3/payments/{asaasId}"
 
     headers = {
         "accept": "application/json",

@@ -8,7 +8,7 @@ import requests
 
 
 def check_if_client_exist(asaasId):
-    url = f"https://api-sandbox.asaas.com/v3/customers/{asaasId}/restore"
+    url = f"https://www.asaas.com/api/v3/customers/{asaasId}/restore"
     print("🚀 ~ asaasId:", asaasId)
 
     headers = {

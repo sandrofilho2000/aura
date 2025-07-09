@@ -98,7 +98,7 @@ class FakeResponse:
         return self._json_data
 
 def criar_conta_api(payload):
-    url = "https://api-sandbox.asaas.com/v3/accounts"
+    url = "https://www.asaas.com/api/v3/accounts"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
@@ -108,7 +108,7 @@ def criar_conta_api(payload):
     try:
         payload['birthDate'] = payload['birthDate'].isoformat()
         response = requests.post(url, json=payload, headers=headers)
-
+        print("response.json: ", response.json())
         if response.status_code - 200 <= 10:
             return {
                         'status': response.status_code,
