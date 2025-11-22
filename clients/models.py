@@ -5,12 +5,11 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 def criar_cliente_api(payload):
-    print("payload: ", payload)
-    url = "https://www.asaas.com/api/v3/customers"
+    url = f"{settings.ASAAS_URL_API}/customers"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "access_token": settings.ASAAS_ACCESS_TOKEN
+        "access_token": settings.ASAAS_TOKEN_API
     }
 
     try:
@@ -49,11 +48,11 @@ def criar_cliente_api(payload):
 
 
 def atualizar_cliente_api(payload, asaasId):
-    url = f"https://www.asaas.com/api/v3/customers/{asaasId}"
+    url = f"{settings.ASAAS_URL_API}/customers/{asaasId}"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "access_token": settings.ASAAS_ACCESS_TOKEN  
+        "access_token": settings.ASAAS_TOKEN_API  
     }
 
     try:
@@ -82,14 +81,15 @@ def atualizar_cliente_api(payload, asaasId):
         raise Exception(f"Erro ao conectar com a API: {str(e)}")
 
 def delete_cliente_api(asaasId):
-    url = f"https://www.asaas.com/api/v3/customers/{asaasId}"
-    headers = {"accept": "application/json", 'access_token': settings.ASAAS_ACCESS_TOKEN }
+    url = f"{settings.ASAAS_URL_API}/customers/{asaasId}"
+    print("URL: ", url)
+    headers = {"accept": "application/json", 'access_token': settings.ASAAS_TOKEN_API }
     response = requests.delete(url, headers=headers)
     if response.status_code - 200 <= 10:
         return {
-                    'status': response.status_code,
-                    'description': "Cliente Asaas deletado com sucesso!",
-                    'asaasId': response.json()['id'],
+                'status': response.status_code,
+                'description': "Cliente Asaas deletado com sucesso!",
+                'asaasId': response.json()['id'],
                 }                     
 
 

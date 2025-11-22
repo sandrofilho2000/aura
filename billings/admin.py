@@ -11,10 +11,11 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import admin, messages
+from django.conf import settings
 
 
 def delete_billing_from_asaas(asaasId):
-    url = f"https://www.asaas.com/api/v3/payments/{asaasId}"
+    url = f"{settings.ASAAS_URL_API}/payments/{asaasId}"
 
     headers = {
         "accept": "application/json",

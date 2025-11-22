@@ -5,11 +5,11 @@ from django.db import IntegrityError
 from django.contrib import admin, messages
 from .models import Client
 import requests
+from django.conf import settings
 
 
 def check_if_client_exist(asaasId):
-    url = f"https://www.asaas.com/api/v3/customers/{asaasId}/restore"
-    print("🚀 ~ asaasId:", asaasId)
+    url = f"{settings.ASAAS_URL_API}/customers/{asaasId}/restore"
 
     headers = {
         "accept": "application/json",

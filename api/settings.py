@@ -5,8 +5,7 @@ import dj_database_url
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+ENVIRONMENT = os.getenv("ENVIRONMENT")
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG') == 'True'
@@ -107,9 +106,19 @@ WSGI_APPLICATION = 'api.wsgi.app'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-}
+if ENVIRONMENT == "local":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    
+elif ENVIRONMENT == "remote":
+    DATABASES = {
+        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    }
+
 
 
 
@@ -141,7 +150,8 @@ INTERNAL_IPS = [
 ]
 
 
-ASAAS_ACCESS_TOKEN = os.getenv('ASAAS_API')
+ASAAS_TOKEN_API = os.getenv('ASAAS_TOKEN_API')
+ASAAS_URL_API = os.getenv('ASAAS_URL_API')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 

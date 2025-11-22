@@ -14,7 +14,7 @@ def get_due_date():
     return now().date() + timedelta(days=7)
 
 def delete_billing_from_asaas(asaasId):
-    url = f"https://www.asaas.com/api/v3/payments/{asaasId}"
+    url = f"{settings.ASAAS_URL_API}/payments/{asaasId}"
 
     headers = {
         "accept": "application/json",
@@ -72,8 +72,14 @@ class Billing(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     dueDate = models.DateField("Data de vencimento", default=get_due_date)
     paylink = models.URLField("Link de pagamento", null=True, editable=False)
-    asaasId = models.CharField("ID Asaas", null=True, editable=False)
-    installmentCount = models.IntegerField("Número de parcelas", validators=[MinValueValidator(0), MaxValueValidator(12)], help_text=_("Somente no caso de cobrança parcelada."), null=True)
+    asaasId = models.CharField("ID Asaas", null=True, editable=False, max_length=255)
+    installmentCount = models.IntegerField(
+        "Número de parcelas",
+        choices=[(i, str(i)) for i in range(1, 13)],
+        null=True,
+        blank=True,
+        help_text="Somente no caso de cobrança parcelada."
+        )
     value = models.DecimalField(
         _("Valor da cobrança"),  
         max_digits=12,  

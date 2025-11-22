@@ -91,12 +91,12 @@ class CreateBillingView(APIView):
             billing_id = data.get("id")
             billing = Billing.objects.get(id=billing_id)
 
-            url = "https://www.asaas.com/api/v3/payments"
+            url = f"{settings.ASAAS_URL_API}/payments"
 
             headers = {
                 "accept": "application/json",
                 "content-type": "application/json",
-                "access_token": settings.ASAAS_ACCESS_TOKEN  
+                "access_token": settings.ASAAS_TOKEN_API  
             }
 
             

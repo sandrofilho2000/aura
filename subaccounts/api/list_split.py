@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 
 
-url = "https://www.asaas.com/api/v3/finance/split/statistics"
+url = f"{settings.ASAAS_URL_API}/finance/split/statistics"
 
 headers = {
     "accept": "application/json",

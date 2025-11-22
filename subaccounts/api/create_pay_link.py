@@ -5,7 +5,7 @@ import os
 load_dotenv()
 
 
-url = "https://www.asaas.com/api/v3/paymentLinks"
+url = f"{settings.ASAAS_URL_API}/paymentLinks"
 
 payload = {
     "name": "Produto Exemplo",

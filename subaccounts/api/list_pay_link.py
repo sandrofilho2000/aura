@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 
 
-url = "https://www.asaas.com/api/v3/paymentLinks"
+url = f"{settings.ASAAS_URL_API}/paymentLinks"
 
 
 headers = {
