@@ -46,7 +46,6 @@ def criar_cliente_api(payload):
         raise Exception(f"Erro ao conectar com a API: {str(e)}")
 
 
-
 def atualizar_cliente_api(payload, asaasId):
     url = f"{settings.ASAAS_URL_API}/customers/{asaasId}"
     headers = {
@@ -79,6 +78,7 @@ def atualizar_cliente_api(payload, asaasId):
 
     except requests.exceptions.RequestException as e:
         raise Exception(f"Erro ao conectar com a API: {str(e)}")
+
 
 def delete_cliente_api(asaasId):
     url = f"{settings.ASAAS_URL_API}/customers/{asaasId}"
@@ -121,7 +121,7 @@ class Client(models.Model):
     foreign_customer = models.BooleanField(default=False, verbose_name="Cliente estrangeiro?")
 
     
-    class meta:
+    class Meta:
         verbose_name = 'Cliente'
 
     def __str__(self):

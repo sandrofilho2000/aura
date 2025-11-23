@@ -1,0 +1,146 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}" />
+{% endblock %}
+
+{% block bodyclass %}
+  {{ block.super }} dashboard
+{% endblock %}
+
+{% block nav-breadcrumbs %}
+<nav class="breadcrumbs-wrapper" aria-label="{% translate 'Breadcrumbs' %}">
+  <div class="menu-toggle-btn">
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+      <path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="48" d="M88 152h336M88 256h336M88 360h336"></path>
+    </svg>
+  </div>
+  {% block breadcrumbs %}
+    <div class="breadcrumbs">
+      <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+      {% if title %}
+        <span>&rsaquo; {{ title }}</span>
+      {% endif %}
+    </div>
+  {% endblock %}
+</nav>
+{% endblock %}
+
+{% if not is_popup and is_nav_sidebar_enabled %}
+  {% block nav-sidebar %}
+  {% include 'admin/nav_sidebar.html' %}
+  {% endblock %}
+{% endif %}
+
+{% block content %}
+  <div class="app-home" id="content-main">
+    <div class="select_fields">
+      <select id="period-select">
+        <option value="daily">Diário</option>
+        <option value="monthly" selected>Mensal</option>
+        <option value="yearly">Anual</option>
+      </select>
+      <select style="display: none ;" class="period-helper-select monthly-select" aria-label="Ano">
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+      </select>
+      <select style="display:inline-block;" class="period-helper-select daily-select" aria-label="Ano">
+        <option value="1">Jan</option>
+        <option value="2">Fev</option>
+        <option value="3">Mar</option>
+        <option value="4">Abr</option>
+        <option value="5">Mai</option>
+        <option value="6">Jun</option>
+        <option value="7">Jul</option>
+        <option value="8">Ago</option>
+        <option value="9">Set</option>
+        <option value="10">Out</option>
+        <option value="11">Nov</option>
+        <option value="12">Dez</option>
+      </select>
+    </div>
+
+    <div class="info-container mt-4 grid grid-cols-1 grid-rows-4 gap-2 md:grid-cols-2 md:grid-rows-2 lg:grid-cols-4 lg:grid-rows-1 lg:gap-4 text-xs">
+      <div class="info col-span-1 flex items-center gap-2 whitespace-nowrap" id="info-sales">
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+          <path d="M528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681z"></path>
+        </svg>
+        <span class="info-text">Vendas:</span>
+        <span class="info-value info-sales-value"></span>
+      </div>
+      <div class="info col-span-1 flex items-center gap-2 whitespace-nowrap" id="info-items">
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 640 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+          <path d="M425.7 256c-16.9 0-32.8-9-41.4-23.4L320 126l-64.2 106.6c-8.7 14.5-24.6 23.5-41.5 23.5-4.5 0-9-.6-13.3-1.9L64 215v178c0 14.7 10 27.5 24.2 31l216.2 54.1c10.2 2.5 20.9 2.5 31 0L551.8 424c14.2-3.6 24.2-16.4 24.2-31V215l-137 39.1c-4.3 1.3-8.8 1.9-13.3 1.9zm212.6-112.2L586.8 41c-3.1-6.2-9.8-9.8-16.7-8.9L320 64l91.7 152.1c3.8 6.3 11.4 9.3 18.5 7.3l197.9-56.5c9.9-2.9 14.7-13.9 10.2-23.1zM53.2 41L1.7 143.8c-4.6 9.2.3 20.2 10.1 23l197.9 56.5c7.1 2 14.7-1 18.5-7.3L320 64 69.8 32.1c-6.9-.8-13.5 2.7-16.6 8.9z"></path>
+        </svg>
+        <span class="info-text">QTD. ITENS:</span>
+        <span class="info-value info-items-value">1245</span>
+      </div>
+      <div class="info col-span-1 flex items-center gap-2 whitespace-nowrap" id="info-income">
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+          <path d="M448 400H64a16 16 0 0 1 0-32h384a16 16 0 0 1 0 32zm-32 48H96a16 16 0 0 1 0-32h320a16 16 0 0 1 0 32zM32 272H16v48a32 32 0 0 0 32 32h48v-16a64.07 64.07 0 0 0-64-64z"></path>
+          <path d="M480 240h16v-64h-16a96.11 96.11 0 0 1-96-96V64H128v16a96.11 96.11 0 0 1-96 96H16v64h16a96.11 96.11 0 0 1 96 96v16h256v-16a96.11 96.11 0 0 1 96-96zm-224 64a96 96 0 1 1 96-96 96.11 96.11 0 0 1-96 96z"></path>
+          <circle cx="256" cy="208" r="64"></circle>
+          <path d="M416 336v16h48a32 32 0 0 0 32-32v-48h-16a64.07 64.07 0 0 0-64 64zm64-192h16V96a32 32 0 0 0-32-32h-48v16a64.07 64.07 0 0 0 64 64zM96 80V64H48a32 32 0 0 0-32 32v48h16a64.07 64.07 0 0 0 64-64z"></path>
+        </svg>
+        <span class="info-text">Receita:</span>
+        <span class="info-value info-income-value">R$12.000,09</span>
+      </div>
+      <div class="info col-span-1 flex items-center gap-2 whitespace-nowrap" id="info-avg">
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+          <path d="M160 0c17.7 0 32 14.3 32 32l0 35.7c1.6 .2 3.1 .4 4.7 .7c.4 .1 .7 .1 1.1 .2l48 8.8c17.4 3.2 28.9 19.9 25.7 37.2s-19.9 28.9-37.2 25.7l-47.5-8.7c-31.3-4.6-58.9-1.5-78.3 6.2s-27.2 18.3-29 28.1c-2 10.7-.5 16.7 1.2 20.4c1.8 3.9 5.5 8.3 12.8 13.2c16.3 10.7 41.3 17.7 73.7 26.3l2.9 .8c28.6 7.6 63.6 16.8 89.6 33.8c14.2 9.3 27.6 21.9 35.9 39.5c8.5 17.9 10.3 37.9 6.4 59.2c-6.9 38-33.1 63.4-65.6 76.7c-13.7 5.6-28.6 9.2-44.4 11l0 33.4c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-34.9c-.4-.1-.9-.1-1.3-.2l-.2 0s0 0 0 0c-24.4-3.8-64.5-14.3-91.5-26.3c-16.1-7.2-23.4-26.1-16.2-42.2s26.1-23.4 42.2-16.2c20.9 9.3 55.3 18.5 75.2 21.6c31.9 4.7 58.2 2 76-5.3c16.9-6.9 24.6-16.9 26.8-28.9c1.9-10.6 .4-16.7-1.3-20.4c-1.9-4-5.6-8.4-13-13.3c-16.4-10.7-41.5-17.7-74-26.3l-2.8-.7s0 0 0 0C119.4 279.3 84.4 270 58.4 253c-14.2-9.3-27.5-22-35.8-39.6c-8.4-17.9-10.1-37.9-6.1-59.2C23.7 116 52.3 91.2 84.8 78.3c13.3-5.3 27.9-8.9 43.2-11L128 32c0-17.7 14.3-32 32-32z"></path>
+        </svg>
+        <span class="info-text">Média:</span>
+        <span class="info-value info-avg-value">R$12.000,09</span>
+      </div>
+    </div>
+    <div class="graph-container grid md:grid-cols-3 gap-2 lg:gap-4 grid-cols-1 mt-4">
+      <div class="graph md:col-span-2 col-span-1">
+        <canvas id="sales_volume"></canvas>
+      </div>
+
+      <div class="graph md:col-span-1">
+        <canvas id="sales_channel"></canvas>
+      </div>
+    </div>
+    <div class="graph-container grid grid-cols-3 gap-4 mt-4">
+      <div class="graph"></div>
+      <div class="graph col-span-2"></div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sidebar %}
+  <!--  <div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% translate 'Recent actions' %}</h2>
+        <h3>{% translate 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% translate 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                <span class="visually-hidden">{% if entry.is_addition %}{% translate 'Added:' %}{% elif entry.is_change %}{% translate 'Changed:' %}{% elif entry.is_deletion %}{% translate 'Deleted:' %}{% endif %}</span>
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    {{ entry.object_repr }}
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+                <br>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>  -->
+{% endblock %}

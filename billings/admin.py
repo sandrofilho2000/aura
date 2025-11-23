@@ -12,19 +12,49 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import admin, messages
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
+friendly_status = {
+"PAYMENT_AUTHORIZED": "Pagamento autorizado",
+"PAYMENT_APPROVED_BY_RISK_ANALYSIS": "Aprovado pela análise de risco",
+"PAYMENT_CREATED": "Cobrança criada",
+"PAYMENT_CONFIRMED": "Pagamento confirmado",
+"PAYMENT_ANTICIPATED": "Pagamento antecipado",
+"PAYMENT_DELETED": "Cobrança removida",
+"PAYMENT_REFUNDED": "Estornado",
+"PAYMENT_REFUND_DENIED": "Estorno negado",
+"PAYMENT_CHARGEBACK_REQUESTED": "Chargeback solicitado",
+"PAYMENT_AWAITING_CHARGEBACK_REVERSAL": "Aguardando repasse após disputa",
+"PAYMENT_DUNNING_REQUESTED": "Negativação solicitada",
+"PAYMENT_CHECKOUT_VIEWED": "Fatura visualizada",
+"PAYMENT_PARTIALLY_REFUNDED": "Estorno parcial",
+"PAYMENT_SPLIT_DIVERGENCE_BLOCK": "Valor bloqueado por split divergente",
+"PAYMENT_AWAITING_RISK_ANALYSIS": "Aguardando análise de risco",
+"PAYMENT_REPROVED_BY_RISK_ANALYSIS": "Reprovado pela análise de risco",
+"PAYMENT_UPDATED": "Cobrança atualizada",
+"PAYMENT_RECEIVED": "Pagamento recebido",
+"PAYMENT_OVERDUE": "Atrasado",
+"PAYMENT_RESTORED": "Cobrança restaurada",
+"PAYMENT_REFUND_IN_PROGRESS": "Estorno em processamento",
+"PAYMENT_RECEIVED_IN_CASH_UNDONE": "Recebimento em dinheiro desfeito",
+"PAYMENT_CHARGEBACK_DISPUTE": "Disputa de chargeback",
+"PAYMENT_DUNNING_RECEIVED": "Recebimento negativado",
+"PAYMENT_BANK_SLIP_VIEWED": "Boleto visualizado",
+"PAYMENT_CREDIT_CARD_CAPTURE_REFUSED": "Captura do cartão recusada",
+"PAYMENT_SPLIT_CANCELLED": "Split cancelado",
+"PAYMENT_SPLIT_DIVERGENCE_BLOCK_FINISHED": "Bloqueio de split finalizado",
+}
 
 def delete_billing_from_asaas(asaasId):
     url = f"{settings.ASAAS_URL_API}/payments/{asaasId}"
 
     headers = {
         "accept": "application/json",
-        "access_token": "$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFiMWE5OTM4LTI0YjUtNGE1YS1iMzZmLWVjOGRlZGVmMWUwMjo6JGFhY2hfNTU0NGI4NDQtMTczZC00NWUzLTliY2UtNmZhYzQ4MjA5N2M0"
+        "access_token": settings.ASAAS_TOKEN_API
     }
 
     response = requests.delete(url, headers=headers)
-    print("response.status_code: ", response.status_code)
-    print("response.json(): ", response.json())
+
     if response.status_code == 200:
         return {
             'status': response.status_code,
@@ -72,6 +102,7 @@ class BillingAdmin(admin.ModelAdmin):
         "asaasId",
         "created_at",
         "created_by",  
+        "badge_status" 
     )
 
     list_display = (
@@ -80,23 +111,49 @@ class BillingAdmin(admin.ModelAdmin):
         "value",
         "billingType",
         "customer_name",
-        "criado_por",  
+        "criado_por", 
+        "badge_status" 
     )
 
     verbose_name = "Link de pagamento"
     verbose_name_plural = "Links de pagamentos"
 
     fieldsets_base = (
-        (_('Informações da cobrança'), {
+        (_('Informações principais'), {
             'fields': (
                 'title',
                 'value',
                 'billingType',
-                'dueDate',
                 'installmentCount',
                 'customer',
-                'created_at',
-                'created_by',
+            )
+        }),
+        (_('Vencimento e parcelas'), {
+            'fields': (
+                'dueDate',
+                'daysAfterDueDateToRegistrationCancellation',
+            )
+        }),
+        (_('Juros'), {
+            'fields': (
+                'interest_enabled',
+                'interest_value',
+                'interest_start_after_days',
+            )
+        }),
+        
+        (_('Desconto'), {
+            'fields': (
+                'discount_dueDateLimitDays',
+                'discount_type',
+                'discount_value',
+            )
+        }),
+        (_('Multa'), {
+            'fields': (
+                'fine_enabled',
+                'fine_type',
+                'fine_value',
             )
         }),
         (_('Callback'), {
@@ -111,9 +168,28 @@ class BillingAdmin(admin.ModelAdmin):
                 'asaasId',
             )
         }),
+        (_('Auditoria'), {
+            'fields': (
+                'created_at',
+                'created_by',
+                'badge_status',
+            ),
+        }),
+        (_('Descrição'), {
+            'fields': (
+                'description',
+            )
+        }),
     )
-
-
+    
+    def badge_status(self, obj):
+        status_key = obj.status or "Criada"
+        human = friendly_status.get(status_key, status_key.replace("_", " ").title())
+        html = f'<span class="badge status-{status_key}">{human}</span>'
+        return mark_safe(html)
+    
+    badge_status.allow_tags = True
+    badge_status.short_description = "Status"
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:
@@ -167,6 +243,12 @@ class BillingAdmin(admin.ModelAdmin):
                     )
                 })
             )
+        if obj is None: 
+            fieldsets = [
+                fs for fs in fieldsets
+                if fs[0] != _('Auditoria') and fs[0] != _('Informações do Asaas')
+            ]
+
         return fieldsets
 
     def get_queryset(self, request): 
@@ -197,7 +279,7 @@ class BillingAdmin(admin.ModelAdmin):
         if obj.created_by:
             return obj.created_by.get_full_name() or obj.created_by.username
         return "-"
-    criado_por.short_description = "Criado por"
+    criado_por.short_description = "Criada por"
 
     def link_clickável(self, obj):
         if obj.paylink:
@@ -218,3 +300,5 @@ class BillingAdmin(admin.ModelAdmin):
         split = obj.splits.filter(subaccount=self._request_user).first()
         return f"R$ {split.fixedValue:.2f}" if split and split.fixedValue else "-"
     comissao_fixa_usuario.short_description = "Comissão Fixa"
+
+

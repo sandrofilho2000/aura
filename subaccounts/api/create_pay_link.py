@@ -1,6 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
+from django.conf import settings
 
 load_dotenv()
 
@@ -32,7 +33,7 @@ payload = {
 headers = {
     "accept": "application/json",
     "content-type": "application/json",
-    "access_token": "$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFiMWE5OTM4LTI0YjUtNGE1YS1iMzZmLWVjOGRlZGVmMWUwMjo6JGFhY2hfNTU0NGI4NDQtMTczZC00NWUzLTliY2UtNmZhYzQ4MjA5N2M0"
+    "access_token": settings.ASAAS_TOKEN_API
 }
 
 response = requests.post(url, json=payload, headers=headers)

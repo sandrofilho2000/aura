@@ -13,42 +13,11 @@ import requests
 def get_due_date():
     return now().date() + timedelta(days=7)
 
-def delete_billing_from_asaas(asaasId):
-    url = f"{settings.ASAAS_URL_API}/payments/{asaasId}"
-
-    headers = {
-        "accept": "application/json",
-        "access_token": "$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFiMWE5OTM4LTI0YjUtNGE1YS1iMzZmLWVjOGRlZGVmMWUwMjo6JGFhY2hfNTU0NGI4NDQtMTczZC00NWUzLTliY2UtNmZhYzQ4MjA5N2M0"
-    }
-
-    response = requests.delete(url, headers=headers)
-
-    if response.status_code - 200 <= 10:
-        return {
-                    'status': response.status_code,
-                    'description': "Cobrança deletada com sucesso!"
-                }                     
-
-
-    else:
-        response_text = response.json() 
-        errors = response_text.get('errors', [])  
-
-        if errors:
-            for error in errors:
-                return {
-                    'status': 400,
-                    'description': error.get('description', 'Error')  
-                }   
-
-
 
 class PaymentMethod(models.TextChoices):
     CREDIT_CARD = "CREDIT_CARD", _("Crédito")
     BOLETO = "BOLETO", _("Boleto")
     PIX = "PIX", _("PIX")
-
-
 
 
 class Billing(models.Model):
@@ -65,12 +34,26 @@ class Billing(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         editable=False,
-        verbose_name="Criado por",
+        verbose_name="Criada por",
         related_name='created_billings'
     )
     created_at = models.DateTimeField(verbose_name="Criado em",auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    dueDate = models.DateField("Data de vencimento", default=get_due_date)
+    dueDate = models.DateField("Data de vencimento", default=get_due_date,  help_text=(
+        "Data de vencimento da cobrança. "
+        "No caso de cobrança parcelada, esta data será usada apenas como vencimento "
+        "da primeira parcela. As demais parcelas terão sua data calculada "
+        "automaticamente pelo Asaas, mês a mês."
+    ))
+    daysAfterDueDateToRegistrationCancellation = models.PositiveIntegerField(
+        verbose_name="Dias para cancelamento do registro",
+        null=True,
+        blank=True,
+        help_text=(
+            "Dias após o vencimento para cancelamento automático do registro "
+            "(somente para boletos bancários)."
+        )
+    )
     paylink = models.URLField("Link de pagamento", null=True, editable=False)
     asaasId = models.CharField("ID Asaas", null=True, editable=False, max_length=255)
     installmentCount = models.IntegerField(
@@ -102,7 +85,95 @@ class Billing(models.Model):
         related_name='pay_links',
         verbose_name="Cliente"
     )
+    status = models.CharField(
+        "Status",
+        max_length=50,
+        default="Criada",
+        editable=False
+    )
 
+    discount_value = models.DecimalField(
+        "Valor do desconto",
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Valor percentual ou fixo do desconto."
+    )
+
+    discount_dueDateLimitDays = models.IntegerField(
+        "Dias limite para aplicar desconto",
+        null=True,
+        blank=True,
+        help_text="Dias antes do vencimento para aplicar o desconto (0 = até o vencimento)."
+    )
+
+    discount_type = models.CharField(
+        "Tipo de desconto",
+        max_length=20,
+        null=True,
+        blank=True,
+        choices=[
+            ("PERCENTAGE", "Percentual"),
+            ("FIXED", "Fixo")
+        ]
+    )
+    
+    interest_enabled = models.BooleanField(
+        verbose_name="Habilitar juros",
+        default=False,
+        help_text="Ativa a cobrança de juros após o vencimento."
+    )
+
+    interest_value = models.DecimalField(
+        verbose_name="Valor do juros (%)",
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
+    interest_start_after_days = models.PositiveIntegerField(
+        verbose_name="Início da cobrança (dias)",
+        blank=True,
+        null=True,
+        help_text="Quantidade de dias após o vencimento para começar a cobrar os juros."
+    )
+    
+    fine_enabled = models.BooleanField(
+        verbose_name="Habilitar multa",
+        default=False,
+        help_text="Ativa a cobrança de multa para pagamentos após o vencimento."
+    )
+
+    fine_type = models.CharField(
+        verbose_name="Tipo de multa",
+        max_length=20,
+        choices=(
+            ('PERCENTAGE', 'Percentual (%)'),
+            ('FIXED', 'Valor Fixo (R$)')
+        ),
+        blank=True,
+        null=True,
+        help_text="Define se a multa será percentual ou um valor fixo."
+    )
+
+    fine_value = models.DecimalField(
+        verbose_name="Valor da multa",
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="Valor da multa (em % ou em R$, conforme o tipo selecionado)."
+    )
+    description = models.CharField(
+        verbose_name="Descrição",
+        max_length=500,
+        null=True,
+        blank=True,
+        help_text="Descrição da cobrança (máx. 500 caracteres)."
+    )
+    
     class Meta:
         verbose_name = 'Cobrança'
 

@@ -6,11 +6,11 @@ function toggleinstallmentCountField(){
   const value = id_billingType.value
   if (!field_installmentCount) return
   
-  if(value != 'CREDIT_CARD'){
+  if(value == 'CREDIT_CARD' || value == 'BOLETO'){
+    field_installmentCount.style.display = 'block'
+  }else{
     field_installmentCount.style.display = 'none'
     id_installmentCount.value = 1
-  }else{
-    field_installmentCount.style.display = 'block'
   }
 }
 

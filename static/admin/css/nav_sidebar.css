@@ -10,14 +10,20 @@
     border: unset;
 }
 
+
+.breadcrumbs-wrapper{
+    position: relative;
+    z-index: 50;
+}
+
 .menu-toggle-btn{
     font-size: 30px;
-    color: white;
-    position: absolute;
-    top: 50%;
+    color: var(--button-bg);
+    position: fixed;
+    top: 50px;
     opacity: 1;
-    z-index: 10;
-    transform: translate(15%, -43%);
+    z-index: 20;
+    left: 5px;
 }
 
 .menu-toggle-btn svg{
@@ -42,11 +48,12 @@
     overflow-x: hidden;
     width: 40px;
     height: 100%;
-    top: 20px;
-    background: var(--body-bg);
-    position: sticky;
+    padding-top: 92px;
+    top: 0px;
+    background: var(--darkened-bg);
+    position: fixed;
     transition: all ease 0.25s;
-    border-right: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(15, 34, 58, 0.12);
 }
 
 [dir="rtl"] #nav-sidebar {
@@ -64,7 +71,7 @@
 }
 
 #nav-sidebar li svg{
-    color: var(--link-fg);
+    color: var(--primary);
     font-size: 20px;
     margin-right: 10px;
 }
@@ -86,9 +93,7 @@
     width: 240px;
     max-width: unset;
     visibility: visible;
-    background: var(--body-bg);
     left: 0;
-    border-right: 1px solid var(--border-color);
 }
 
 [dir="rtl"] .main.shifted > #nav-sidebar {
@@ -190,10 +195,14 @@
 }
 
 #nav-sidebar > ul li *{
-    color: var(--link-fg);
+    color: var(--primary);
     white-space: nowrap;
+    text-transform: uppercase;
+    font-weight: 500;
 }
-
+#nav-sidebar > ul li span.text {
+    font-size: 11px;
+}
 #nav-sidebar ul li .icon, #nav-sidebar ul li .caret
 {
     width: 30px;
@@ -231,13 +240,52 @@
     white-space: nowrap;
 }
 
+#nav-integrations{
+    background-color: var(--darkened-bg);
+    box-shadow: -2px 2px 4px rgba(15, 34, 58, 0.12);
+}
+
+#default-modal{
+    position: absolute;
+    background-color: var(--darkened-bg);
+    left: 50%;
+    box-shadow: var(--box-shadow);
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#default-modal h3, #default-modal p{
+    color: var(--body-fg);
+}
+
+#default-modal button.close-modal{
+    display: block;
+    background: var(--delete-button-bg);
+    border-radius: 4px;
+    padding: 0.625rem 0.9375rem;
+    line-height: 0.9375rem;
+    color: var(--button-fg);
+}
+
+#default-modal button.import{
+    background: var(--button-bg);
+    padding: 7px;
+    border: none;
+    border-radius: 4px;
+    color: var(--button-fg);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
 @media (max-width: 991px) {
     #nav-sidebar{
         transform: -260px;
     }
 
     body:not(.login) main#content-start {
-    left: 10px;
+    left: 20px;
+    width: 100%;
+    padding: 20px;
     }
 
 }
@@ -257,6 +305,7 @@
 
     body:not(.login) main#content-start{
         width: 100%;
-        left: 0;
+        left: 0px;
+        padding: 10px;
     }
 }

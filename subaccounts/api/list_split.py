@@ -1,6 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
+from django.conf import settings
 
 
 url = f"{settings.ASAAS_URL_API}/finance/split/statistics"

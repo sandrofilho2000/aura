@@ -5,46 +5,41 @@
 /* VARIABLE DEFINITIONS */
 html[data-theme="light"],
 :root {
-    --primary: #6EC1E4;
-    --secondary: #501577;
-    --accent: #61CE70;
-    --primary-fg: #FFFFFF;
-    --body-fg: #333;
-    --body-bg: #ffffff;
-    --body-quiet-color: #666666;
-    --body-medium-color: #54595F;
-    --body-loud-color: #0D0D0D;
-    --header-color: #F9F9F9;
+    --accent: #f5dd5d;
+    --primary-fg: #fff;
+    --body-fg: #495057;
+    --body-bg: #f3f3f9;
+    --body-quiet-color: #666;
+    --body-medium-color: #444;
+    --body-loud-color: #000;
+    --header-color: #ffc;
     --header-branding-color: var(--accent);
-    --header-bg: var(--secondary);
+    --header-bg: var(--primary);
     --header-link-color: var(--primary-fg);
-    --breadcrumbs-fg: #6EC1E4;
-    --breadcrumbs-link-fg: var(--body-bg);
-    --breadcrumbs-bg: #16859A;
-    --link-fg: #501577;
-    --link-hover-color: #16859A;
-    --link-selected-fg: var(--secondary);
-    --hairline-color: #DDDDDD;
-    --border-color: #cccccc;
-    --error-fg: #D66DFF;
-    --message-success-bg: #61CE70;
-    --message-warning-bg: #F9F9F9;
-    --message-error-bg: #D66DFF;
-    --darkened-bg: #f8f8f8;
-    --selected-bg: #DDDDDD;
-    --selected-row: #D66DFF;
-    --button-fg: #FFFFFF;
-    --button-bg: var(--secondary);
-    --button-hover-bg: #6EC1E4;
-    --default-button-bg: #159966;
-    --default-button-hover-bg: #6EC1E4;
-    --close-button-bg: #54595F;
-    --close-button-hover-bg: #0D0D0D;
-    --delete-button-bg: #D66DFF;
-    --delete-button-hover-bg: #501577;
+    --breadcrumbs-fg: #c4dce8;
+    --breadcrumbs-link-fg: var();
+    --breadcrumbs-link-fg: var(--body-fg);
+    --link-selected-fg: var(--primary);
+    --hairline-color: #e8e8e8;
+    --border-color: #ccc;
+    --error-fg: #ba2121;
+    --message-success-bg: #dfd;
+    --message-warning-bg: #ffc;
+    --message-error-bg: #ffefef;
+    --darkened-bg: #ffffff; /* A bit darker than --body-bg */
+    --selected-bg: #e4e4e4; /* E.g. selected table cells */
+    --selected-row: #ffc;
+    --button-fg: #fff;
+    --button-bg: var(--primary);
+    --default-button-hover-bg: var(--primary);
+    --close-button-bg: #747474;
+    --close-button-hover-bg: #333;
+    --delete-button-bg: #ba2121;
+    --delete-button-hover-bg: #a41515;
     --object-tools-fg: var(--button-fg);
     --object-tools-bg: var(--close-button-bg);
     --object-tools-hover-bg: var(--close-button-hover-bg);
+    --box-shadow: 0 1px 2px rgba(56,65,74,0.15);
     --font-family-primary:
         "Segoe UI",
         system-ui,
@@ -81,9 +76,6 @@ html[data-theme="light"],
     --border-radius: 4px;
 }
 
-*{
-    list-style-type: none;
-}
 
 html, body {
     height: 100%;
@@ -147,13 +139,13 @@ td.field-discount input {
 }
 
 a:link, a:visited {
-    color: var(--body-fg);
+    color: var(--primary);
     text-decoration: none;
     transition: color 0.15s, background 0.15s;
 }
 
 a:focus, a:hover {
-    color: var(--link-hover-color);
+    color: var(--primary);
 }
 
 a:focus {
@@ -485,7 +477,7 @@ table thead th.sorted .sortoptions a.sortremove:after {
 
 table thead th.sorted .sortoptions a.sortremove:focus:after,
 table thead th.sorted .sortoptions a.sortremove:hover:after {
-    color: var(--link-fg);
+    color: var(--primary);
 }
 
 table thead th.sorted .sortoptions a.sortremove:focus,
@@ -542,7 +534,7 @@ input[type=url], input[type=number], input[type=tel], textarea, select,
     padding: 5px 6px;
     margin-top: 0;
     color: var(--body-fg);
-    background-color: var(--body-bg);
+    background-color: var(--darkened-bg);
 }
 
 /*
@@ -584,7 +576,7 @@ a.button {
 .button:active, input[type=submit]:active, input[type=button]:active,
 .button:focus, input[type=submit]:focus, input[type=button]:focus,
 .button:hover, input[type=submit]:hover, input[type=button]:hover {
-    background: var(--button-hover-bg);
+    background: var(--secondary);
 }
 
 .button[disabled], input[type=submit][disabled], input[type=button][disabled] {
@@ -594,7 +586,7 @@ a.button {
 .button.default, input[type=submit].default, .submit-row input.default {
     border: none;
     font-weight: 400;
-    background: var(--default-button-bg);
+    background: var(--secondary);
 }
 
 .button.default:active, input[type=submit].default:active,
@@ -665,7 +657,6 @@ ul.messagelist {
 }
 
 ul.messagelist a{
-    color: white;
     text-decoration: underline;
 }
 
@@ -761,13 +752,16 @@ td ul.errorlist + input, td ul.errorlist + select, td ul.errorlist + textarea {
 /* BREADCRUMBS */
 
 div.breadcrumbs {
-    background: var(--secondary);
+    background: var(--darkened-bg);
     padding: 10px 40px;
     border: none;
-    color: var(--breadcrumbs-fg);
+    color: var(--default-button-hover-bg);
     text-align: left;
     position: relative;
-    border-top: 1px solid var(--body-fg);
+    box-shadow: 0 2px 4px rgba(15, 34, 58, 0.12);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 11px;
 }
 
 div.breadcrumbs a {
@@ -930,6 +924,12 @@ body:not(.login) .main > .content {
     /* padding: 20px 40px; */
 }
 
+.select_fields select {
+    background: var(--darkened-bg);
+    box-shadow: var(--box-shadow);
+    border: none;
+}
+
 #content-main {
     float: left;
     width: 100%;
@@ -982,7 +982,10 @@ body:not(.login) .main > .content {
     align-items: center;
     padding: 10px 40px;
     background: var(--header-bg);
-    color: var(--header-color);
+    color: #ffffff;
+    position: relative;
+    z-index: 51;
+    height: 47px;
 }
 
 #header a:focus , #header a:hover {
@@ -1051,7 +1054,7 @@ body:not(.login) .main > .content {
 #user-tools .welcome-msg{
     display: inline;
     cursor: pointer;
-    border-bottom: 1px solid #ffffcc;
+    border-bottom: 1px solid #ffffff;
 }
 
 #user-tools:hover ul{
@@ -1087,7 +1090,7 @@ body:not(.login) .main > .content {
 }
 
 #user-tools ul li:not(:last-of-type){
-    border-bottom: 1px solid var(--default-button-bg);
+    border-bottom: 1px solid var(--secondary);
 }
 
 .color_toggle{
@@ -1117,10 +1120,10 @@ body main#content-start{
 
 body:not(.login) main#content-start{
     transition: all ease 0.25s;
-    width: calc( 100% - 0px);
+    width: calc( 100% - 40px);
     position: absolute;
-    left: 30px;
-    padding: 30px;
+    left: 40px;
+    padding: 30px 30px;
 }
 
 #user-tools, #logout-form button{
@@ -1139,9 +1142,6 @@ body:not(.login) main#content-start{
     border-bottom: 0;
 }
 
-#logout-form button:active, #logout-form button:hover {
-    margin-bottom: 1px;
-}
 
 /* SIDEBAR */
 
@@ -1155,7 +1155,7 @@ body:not(.login) main#content-start{
 }
 
 #content-related h3 {
-    color: var(--body-fg);
+    color: var(--body-quiet-color);
     padding: 0 16px;
     margin: 0 0 16px;
 }
@@ -1205,15 +1205,52 @@ body:not(.login) main#content-start{
 .delete-confirmation form .cancel-link {
     display: inline-block;
     vertical-align: middle;
-    height: 100%;
+    height: 0.9375rem;
     line-height: 0.9375rem;
     border-radius: 4px;
-    padding: 13px 15px;
+    padding: 10px 15px;
     color: var(--button-fg);
     background: var(--close-button-bg);
     margin: 0 0 0 10px;
-    max-height: 40px;
 }
+
+.info-container .info{
+    padding: 20px;
+    border-radius: var(--border-radius);
+    background: var(--darkened-bg);
+    position: relative;
+    box-shadow: var(--box-shadow);
+}
+
+#changelist-search > div{
+    padding-left: 15px;
+    position: relative;
+}
+#changelist-search label{
+    width: 20px;
+    display: block;
+    bottom: 8px;
+    left: -4px;
+    position: absolute;
+}
+
+
+.info-container span{
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.info-container .info-value{
+    position: absolute;
+    right: 20px;
+}
+
+.info-container .info svg{
+    list-style-type: none;
+    font-size: 20px;
+    color: var(--primary);
+}
+
 
 .delete-confirmation form .cancel-link:active,
 .delete-confirmation form .cancel-link:focus,
@@ -1260,12 +1297,12 @@ body:not(.login) main#content-start{
 .paginator a.showall {
     border: none;
     background: none;
-    color: var(--link-fg);
+    color: var(--primary);
 }
 
 .paginator a.showall:focus, .paginator a.showall:hover {
     background: none;
-    color: var(--link-hover-color);
+    color: var(--primary);
 }
 
 .paginator .end {
@@ -1281,7 +1318,7 @@ body:not(.login) main#content-start{
 
 .paginator a:focus, .paginator a:hover {
     color: white;
-    background: var(--link-hover-color);
+    background: var(--primary);
 }
 
 .paginator input {
@@ -1307,6 +1344,7 @@ body:not(.login) main#content-start{
 
 .breadcrumbs-wrapper{
     position: relative;
+    z-index: 50;
 }
 
 .logo-wrapper{
@@ -1322,6 +1360,7 @@ body:not(.login) main#content-start{
     width: 100%;
     background: var(--darkened-bg);
     border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
 }
 
 
@@ -1345,18 +1384,15 @@ body:not(.login) main#content-start{
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
     -webkit-tap-highlight-color: transparent;
-    --secondary: #9e61c7;
     --accent: #f5dd5d;
     --header-color: #ffc;
     --header-branding-color: var(--accent);
-    --header-bg: var(--secondary);
+    --header-bg: var(--primary);
     --header-link-color: var(--primary-fg);
     --breadcrumbs-fg: #c4dce8;
     --button-fg: #fff;
-    --button-bg: var(--secondary);
-    --button-hover-bg: #3d3062;
-    --default-button-bg: #3d3062;
-    --default-button-hover-bg: var(--secondary);
+    --button-bg: var(--primary);
+    --default-button-hover-bg: var(--primary);
     --delete-button-bg: #ba2121;
     --delete-button-hover-bg: #a41515;
     --object-tools-fg: var(--button-fg);
@@ -1390,7 +1426,8 @@ body:not(.login) main#content-start{
         "Segoe UI Symbol",
         "Noto Color Emoji";
     --border-radius: 4px;
-    --primary: #3d3062;
+    --primary: #166eae;
+    --secondary: #00afd4;
     --primary-fg: #f7f7f7;
     --body-fg: #eeeeee;
     --body-bg: #121212;
@@ -1399,8 +1436,6 @@ body:not(.login) main#content-start{
     --body-loud-color: #ffffff;
     --breadcrumbs-link-fg: #e0e0e0;
     --breadcrumbs-bg: var(--primary);
-    --link-fg: #9e61c7;
-    --link-hover-color: #9e61c7;
     --link-selected-fg: #6f94c6;
     --hairline-color: #272727;
     --border-color: #353535;
@@ -1443,8 +1478,26 @@ body:not(.login) main#content-start{
     border: 1px solid var(--border-color);
 }
 
+#product_img_preview{
+    box-shadow: var(--box-shadow);
+}
+
+#product_description_preview{
+    color: var(--body-quiet-color);
+}
+
+.product_viewer .description-wrapper{
+    border: 1px solid var(--border-color);
+}
+#product_name_preview{
+    margin: 0px;
+}
+#search_by_url{
+    background: var(--primary);
+}
+
 .loading-overlay svg{
-    fill: var(--default-button-bg);
+    fill: var(--secondary);
 }
 
 .img_container .loading-overlay{
@@ -1455,39 +1508,79 @@ body:not(.login) main#content-start{
     display: flex;
 }
 
-.input-text-field{
-    padding-left: 15px;
-    position: relative;
-}
-.input-text-field label{
-    width: 20px;
-    display: block;
-    bottom: 8px;
-    left: -4px;
-    position: absolute;
+
+.import-loading svg{
+    fill: var(--primary);
+    color: var(--body-quiet-color);
 }
 
-tr.form-row.loading{
-    position: relative;
+.badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
-tr.form-row.loading::after{
-    content: 'Carregando...';
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    font-size: 18px;
-    padding-left: 10px;
-    font-weight: 600;
-    color: var(--header-color);
-    position: absolute;
-    z-index: 1;
-    background-color: var(--body-bg);
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    opacity: 0.9;
-    transition: 0.4s;
-    text-align: center;
+/* Criada - padrão */
+.status-Criada {
+    background: #6c757d;
+}
+
+/* Pagamento recebido */
+.status-PAYMENT_RECEIVED {
+    background: #28a745;
+}
+
+/* Confirmado mas não liberado */
+.status-PAYMENT_CONFIRMED {
+    background: #17a2b8;
+}
+
+/* Vencida */
+.status-PAYMENT_OVERDUE {
+    background: #dc3545;
+}
+
+/* Estornada */
+.status-PAYMENT_REFUNDED {
+    background: #ff6f00;
+}
+
+/* Estorno parcial */
+.status-PAYMENT_PARTIALLY_REFUNDED {
+    background: #ff9800;
+}
+
+/* Chargeback */
+.status-PAYMENT_CHARGEBACK_REQUESTED {
+    background: #c2185b;
+}
+
+/* Análise de risco */
+.status-PAYMENT_APPROVED_BY_RISK_ANALYSIS,
+.status-PAYMENT_AWAITING_RISK_ANALYSIS {
+    background: #3f51b5;
+}
+
+/* Atualizada */
+.status-PAYMENT_UPDATED {
+    background: #795548;
+}
+
+/* Criada no Asaas */
+.status-PAYMENT_CREATED {
+    background: #6f42c1;
+}
+
+/* Visualizações */
+.status-PAYMENT_CHECKOUT_VIEWED,
+.status-PAYMENT_BANK_SLIP_VIEWED {
+    background: #007bff;
+}
+
+#splits-group table th:last-of-type{
+    text-align: end;
 }

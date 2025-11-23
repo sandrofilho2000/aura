@@ -90,7 +90,7 @@ class CreateBillingView(APIView):
             data = request.data  
             billing_id = data.get("id")
             billing = Billing.objects.get(id=billing_id)
-
+            print("billing: ", billing)
             url = f"{settings.ASAAS_URL_API}/payments"
 
             headers = {
@@ -99,15 +99,35 @@ class CreateBillingView(APIView):
                 "access_token": settings.ASAAS_TOKEN_API  
             }
 
-            
-            if(data.get("installmentCount") and data.get("billingType") == "CREDIT_CARD"):
-                value = float(data.get("value"))
-                installmentCount = float(data.get("installmentCount"))
-                installmentValue = value / installmentCount
-                data['installmentValue'] = installmentValue
+            if data.get("billingType") == "CREDIT_CARD" or data.get("billingType") == "BOLETO":
+                if(data.get("installmentCount")):
+                    value = float(data.get("value"))
+                    installmentCount = float(data.get("installmentCount"))
+                    installmentValue = value / installmentCount
+                    data['installmentValue'] = installmentValue
             else:
                 data.pop("installmentCount")
 
+            if data.get("discount_value") != None and data.get("discount_dueDateLimitDays") != None and data.get("discount_type") != None:
+                discount = {}
+                discount['value'] = data.get("discount_value")
+                discount['type'] = data.get("discount_type")
+                discount['dueDateLimitDays'] = data.get("discount_dueDateLimitDays")
+                data['discount'] = discount
+
+            if data.get("discount_value") != None and data.get("discount_dueDateLimitDays") != None and data.get("discount_type") != None:
+                discount = {}
+                discount['value'] = data.get("discount_value")
+                discount['type'] = data.get("discount_type")
+                discount['dueDateLimitDays'] = data.get("discount_dueDateLimitDays")
+                data['discount'] = discount
+            
+            if data.get("fine_value") and data.get("fine_type"):
+                fine = {}
+                fine['value'] = data.get("fine_value")
+                fine['type'] = data.get("fine_type")
+                data['fine'] = fine
+                
             if(data.get("successUrl")):
                 callback = {
                     "autoRedirect": data.get("autoRedirect"),
@@ -123,9 +143,6 @@ class CreateBillingView(APIView):
                 split = {}
                 walletId = request.user.walletId
 
-
-
-
                 if walletId:
                     percentualValue = float(request.user.percentualValue or 0)
                     fixedValue = float(request.user.fixedValue or 0)
@@ -133,9 +150,6 @@ class CreateBillingView(APIView):
                     split["fixedValue"] = fixedValue
                     split["percentualValue"] = percentualValue
                     data['split'] = [split]
-
-
-
 
             for item in data.get("split", []):
                 item['externalReference'] = str(item.get("id"))
