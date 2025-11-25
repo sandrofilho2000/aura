@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('username', models.CharField(help_text='Obrigatório. 100 caractéres ou menos. Letras, números e @/./+/-/_ caractéres', max_length=100, unique=True, validators=[django.core.validators.RegexValidator(re.compile('^[\\w.@+-]+$'), 'Enter a valid username.', 'invalid')], verbose_name='username')),
                 ('first_name', models.CharField(max_length=30, verbose_name='Primeiro Nome')),
-                ('walletId', models.CharField(blank=True, help_text='Vazio para nova subconta.', max_length=255, verbose_name='Wallet ID')),
+                ('walletId', models.CharField(blank=True, help_text='Vazio para novo afiliado.', max_length=255, verbose_name='Wallet ID')),
                 ('last_name', models.CharField(max_length=30, verbose_name='Sobrenome')),
                 ('email', models.EmailField(max_length=255, unique=True, verbose_name='Email')),
                 ('login_email', models.EmailField(blank=True, help_text='Email de login para a conta Asaas.', max_length=255, null=True, verbose_name='Email de Login')),
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Permissões específicas para este usuário.', related_name='user_permissions', to='auth.permission', verbose_name='Permissões do usuário')),
             ],
             options={
-                'verbose_name': 'Subconta',
+                'verbose_name': 'Afiliado',
                 'ordering': ['email'],
                 'permissions': [('can_edit_own_account', 'Pode editar apenas a própria conta')],
                 'indexes': [models.Index(fields=['email'], name='account_use_email_553b8f_idx')],

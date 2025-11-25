@@ -107,7 +107,6 @@ class BillingAdmin(admin.ModelAdmin):
 
     list_display = (
         "title",
-        "link_clickável",
         "value",
         "billingType",
         "customer_name",
@@ -280,12 +279,6 @@ class BillingAdmin(admin.ModelAdmin):
             return obj.created_by.get_full_name() or obj.created_by.username
         return "-"
     criado_por.short_description = "Criada por"
-
-    def link_clickável(self, obj):
-        if obj.paylink:
-            return format_html('<a href="{}" target="_blank">{}</a>', obj.paylink, obj.paylink)
-        return "-"
-    link_clickável.short_description = "Link de Pagamento"
 
     def customer_name(self, obj):
         return obj.customer.name if obj.customer else "-"

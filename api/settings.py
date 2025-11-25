@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'clients',
     'billings',
     'theme',
+    'settings',
     'rest_framework',
     'rest_framework_simplejwt',
 ]

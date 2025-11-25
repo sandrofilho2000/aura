@@ -112,7 +112,7 @@ def criar_conta_api(payload):
         if response.status_code - 200 <= 10:
             return {
                         'status': response.status_code,
-                        'description': "Subconta criada com sucesso!",
+                        'description': "Afiliado criado com sucesso!",
                         'walletId': response.json()['walletId']
                     }                     
  
@@ -203,7 +203,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     first_name = models.CharField(_('Primeiro Nome'), max_length=30)
-    walletId = models.CharField(_('Wallet ID'), max_length=255, blank=True, help_text=_('Vazio para nova subconta.'))
+    walletId = models.CharField(_('Wallet ID'), max_length=255, blank=True, help_text=_('Vazio para novo afiliado.'))
     last_name = models.CharField(_('Sobrenome'), max_length=30)
     email = models.EmailField(_('Email'), max_length=255, unique=True)
     login_email = models.EmailField(_('Email de Login'), max_length=255, blank=True, null=True, help_text=_('Email de login para a conta Asaas.'))
@@ -294,7 +294,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     class Meta:
-        verbose_name = _('Subconta')
+        verbose_name = _('Afiliado')
         ordering = ['email']
         indexes = [
             models.Index(fields=['email']),
@@ -341,7 +341,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     response_data = criar_conta_api(payload)
 
                     if response_data['status'] == 400:
-                        raise ValidationError(f"Erro ao criar subconta Asaas: {response_data['description']}")
+                        raise ValidationError(f"Erro ao criar afiliado Asaas: {response_data['description']}")
                     
                     if response_data['walletId']:
                         self.walletId = response_data['walletId']

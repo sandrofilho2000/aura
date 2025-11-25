@@ -4,12 +4,10 @@
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-<div id="site-name"><a class="logo-wrapper" href="{% url 'admin:index' %}"><img id="img-logo" src="https://escolademusicaeficaz.com/wp-content/uploads/2022/07/LOGO-PADRÃO.png" width="100" alt="Som da Terra"></a></div>
+<div id="site-name"><a class="logo-wrapper" href="{% url 'admin:index' %}"><img src="{% static 'images/logo.svg' %}" width="60" alt="Som da Terra">
+</a></div>
 {% if user.is_anonymous %}
   {% include "admin/color_theme_toggle.html" %}
-{% else  %}
-<script src="{% static 'admin/js/admin_scripts.js' %}"></script>
-
 {% endif %}
 {% endblock %}
 

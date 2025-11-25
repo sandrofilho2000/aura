@@ -192,7 +192,7 @@ class BillingSplit(models.Model):
     subaccount = models.ForeignKey(
         User,
         related_name='subaccount',
-        verbose_name="Subconta",
+        verbose_name="Afiliado",
         on_delete=models.SET_NULL,
         blank=True,
         null=True
@@ -223,8 +223,8 @@ class BillingSplit(models.Model):
     )
 
     class Meta:
-        verbose_name = "Subconta"
-        verbose_name_plural = "Subcontas"
+        verbose_name = "Afiliado"
+        verbose_name_plural = "Afiliados"
         ordering = ['subaccount__first_name']
 
     def __str__(self):

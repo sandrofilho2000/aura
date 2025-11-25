@@ -4,7 +4,7 @@ class SubAccount(models.Model):
     name = models.CharField(max_length=255, verbose_name='Nome')
     
     class Meta:
-        verbose_name = "Subconta"
+        verbose_name = "Afiliado"
 
     def __str__(self):
         return self.name
