@@ -54,8 +54,6 @@ class Billing(models.Model):
             "(somente para boletos bancários)."
         )
     )
-    paylink = models.URLField("Link de pagamento", null=True, editable=False)
-    asaasId = models.CharField("ID Asaas", null=True, editable=False, max_length=255)
     installmentCount = models.IntegerField(
         "Número de parcelas",
         choices=[(i, str(i)) for i in range(1, 13)],

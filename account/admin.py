@@ -2,7 +2,25 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import User
 from django.contrib import admin, messages
+from asaas.models import AfiliadoAsaas
 
+class AfiliadoAsaasInline(admin.StackedInline):
+    model = AfiliadoAsaas
+    extra = 0
+    max_num = 1 
+    can_delete = False
+    
+    def has_add_permission(self, request, obj):
+        # Só permite adicionar se não existir ainda
+        if AfiliadoAsaas.objects.filter(afiliado=obj).exists():
+            return False
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
@@ -15,7 +33,7 @@ class UserAdmin(BaseUserAdmin):
         (_('Permissões'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Datas Importantes'), {'fields': ('last_login', 'date_joined')}),
     )
-
+    inlines = [AfiliadoAsaasInline]
     filter_horizontal = ('groups', 'user_permissions', 'groups')
 
     list_display = ('email', 'username', 'first_name', 'last_name', 'is_staff', 'get_groups')
@@ -104,3 +122,16 @@ class UserAdmin(BaseUserAdmin):
             return qs
 
         return qs.filter(pk=request.user.pk)
+
+    def get_inline_instances(self, request, obj=None):
+        # Quando criando um novo usuário, obj é None → inline aparece normalmente
+        inline_instances = super().get_inline_instances(request, obj)
+
+        # Se estou editando meu próprio usuário, removo o inline específico
+        if obj and obj.pk == request.user.pk:
+            return [
+                inline for inline in inline_instances
+                if not isinstance(inline, AfiliadoAsaasInline)
+            ]
+
+        return inline_instances

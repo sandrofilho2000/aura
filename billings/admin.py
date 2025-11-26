@@ -98,8 +98,8 @@ class BillingAdmin(admin.ModelAdmin):
     inlines = [BillingSplitInline]
     actions = None
     readonly_fields = (
-        "paylink",
-        "asaasId",
+        # "paylink",
+        # "asaasId",
         "created_at",
         "created_by",  
         "badge_status" 
@@ -159,12 +159,6 @@ class BillingAdmin(admin.ModelAdmin):
             'fields': (
                 'successUrl',
                 'autoRedirect',
-            )
-        }),
-        (_('Informações do Asaas'), {
-            'fields': (
-                'paylink',
-                'asaasId',
             )
         }),
         (_('Auditoria'), {

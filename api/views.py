@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from account.models import User  
 from billings.models import BillingSplit, Billing
-from billings.serializers import BillingSplitSerializer, BillingSerializer
+from billings.serializers import BillingSerializer
 import json
 from django.db import IntegrityError
 from random import randint
@@ -45,11 +45,6 @@ class SearchItemsView(View):
         elif query_params['app'] == "billing":
             splits = Billing.objects.select_related('customer').filter(**{field: value})
             serializer = BillingSerializer(splits, many=True)
-            return JsonResponse({"results": serializer.data, "status": 200}, safe=False)
-              
-        elif query_params['app'] == "billingsplit":
-            splits = BillingSplit.objects.select_related('subaccount').filter(**{field: value})
-            serializer = BillingSplitSerializer(splits, many=True)
             return JsonResponse({"results": serializer.data, "status": 200}, safe=False)
 
         else:
@@ -136,7 +131,7 @@ class CreateBillingView(APIView):
                 data['callback'] = callback
                 
             data['externalReference'] = str(data.get('id'))
-            data.pop('paylink', None)
+            # data.pop('paylink', None)
             data.pop('id', None)
             
             if request.user.groups.filter(name='Vendedores').exists():
@@ -168,18 +163,16 @@ class CreateBillingView(APIView):
                         'detalhe': str(e)
                     }, status=500)
 
-                paylink = res_json.get('invoiceUrl')
-                asaasId = res_json.get('id')
+                # paylink = res_json.get('invoiceUrl')
+                # asaasId = res_json.get('id')
 
-                billing.paylink = paylink
-                billing.asaasId = asaasId
+                # billing.paylink = paylink
+                # billing.asaasId = asaasId
                 billing.save()
 
                 return Response({
                     'status': response.status_code,
                     'description': "Cobrança criada com sucesso!",
-                    'paylink': paylink,
-                    'asaasId': asaasId,
                 })
 
             else:

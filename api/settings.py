@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'billings',
     'theme',
     'settings',
+    'asaas',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
