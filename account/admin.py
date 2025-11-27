@@ -26,7 +26,7 @@ class AfiliadoAsaasInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Informações Pessoais'), {'fields': ('first_name', 'last_name', 'username', 'walletId', 'cpf_cnpj', 'birth_date', 'company_type', 'income_value')}),
+        (_('Informações Pessoais'), {'fields': ('first_name', 'last_name', 'username', 'cpf_cnpj', 'birth_date', 'company_type', 'income_value')}),
         (_('Contato'), {'fields': ('phone', 'mobile_phone', 'site')}),
         (_('Endereço'), {'fields': ('address', 'address_number', 'complement', 'province', 'postal_code')}),
         (_('Comissão'), {'fields': ('fixedValue', 'percentualValue')}),
@@ -101,7 +101,7 @@ class UserAdmin(BaseUserAdmin):
 
         campos_restritos = [
             'fixedValue', 'cpf_cnpj', 'username', 'percentualValue',
-            'walletId', 'last_login', 'date_joined',
+            'last_login', 'date_joined',
             'is_active', 'is_staff', 'is_superuser'
         ]
 

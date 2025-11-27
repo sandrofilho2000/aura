@@ -335,16 +335,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         account = User.objects.filter(pk=self.pk).first()   
 
-        if account:   
-            if not account.is_superuser:
-                if not account.walletId and not self.walletId:
-                    response_data = criar_conta_api(payload)
+        # if account:   
+        #     if not account.is_superuser:
+        #         if not account.walletId and not self.walletId:
+        #             response_data = criar_conta_api(payload)
 
-                    if response_data['status'] == 400:
-                        raise ValidationError(f"Erro ao criar afiliado Asaas: {response_data['description']}")
+        #             if response_data['status'] == 400:
+        #                 raise ValidationError(f"Erro ao criar afiliado Asaas: {response_data['description']}")
                     
-                    if response_data['walletId']:
-                        self.walletId = response_data['walletId']
+        #             if response_data['walletId']:
+        #                 self.walletId = response_data['walletId']
         
         super().save(*args, **kwargs)
        

@@ -1,9 +1,11 @@
-ASAAS_API=$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFiMWE5OTM4LTI0YjUtNGE1YS1iMzZmLWVjOGRlZGVmMWUwMjo6JGFhY2hfNTU0NGI4NDQtMTczZC00NWUzLTliY2UtNmZhYzQ4MjA5N2M0
-WALLET_ID=def32dec-fa03-4ad5-af40-de9ae8b43888
+ASAAS_TOKEN_API=$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjUwN2I2NDMyLTA5ZjItNDc5MC04OWI0LTA2NDU0NzM2YmQ1Nzo6JGFhY2hfN2Y0YTMyNTktYWU3MC00MjBhLTkxNmEtYzU2ODYyZmVjYmRi
+ASAAS_URL_API=https://api-sandbox.asaas.com/v3
+WALLET_ID=32e4b2d4-ad05-45aa-b391-84029d187ecc
 TIME_ZONE='America/Sao_Paulo'
 LANGUAGE_CODE='pt-br'
 SECRET_KEY=django-insecure-_+lplsqdh#z)8ep_$oty+8r8z86$%a0or(w+!8v*(q($hdx5h$
 DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,eficaz-alpha.vercel.app,improved-toucan-quietly.ngrok-free.app
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=neondb
 DB_USER=neondb_owner
@@ -11,3 +13,5 @@ DB_PASSWORD=npg_eHlf6dJyj2BF
 DB_HOST=ep-tiny-heart-a4yzmnjl-pooler.us-east-1.aws.neon.tech
 DB_PORT=5432
 DB_OPTIONS=sslmode=require
+DATABASE_URL=postgres://neondb_owner:npg_eHlf6dJyj2BF@ep-tiny-heart-a4yzmnjl-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+ENVIRONMENT=local

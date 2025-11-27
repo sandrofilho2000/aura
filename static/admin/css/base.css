@@ -1584,3 +1584,7 @@ body:not(.login) main#content-start{
 #splits-group table th:last-of-type{
     text-align: end;
 }
+
+.inline-related.dynamic-asaas_config h3{
+    display: none;
+}

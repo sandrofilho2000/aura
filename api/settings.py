@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'theme',
     'settings',
     'asaas',
+    'integrations',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
