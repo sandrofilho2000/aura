@@ -1588,3 +1588,12 @@ body:not(.login) main#content-start{
 .inline-related.dynamic-asaas_config h3{
     display: none;
 }
+
+
+.badge-nao-configurado { background-color: #6c757d; }
+.badge-aguardando-teste { background-color: #ffc107; color: black; }
+.badge-conectado { background-color: #28a745; }
+.badge-token-invalido { background-color: #dc3545; }
+.badge-erro-de-conexao { background-color: #fd7e14; }
+.badge-api-indisponivel { background-color: #17a2b8; }
+.badge-erro-desconhecido { background-color: #6f42c1; }
