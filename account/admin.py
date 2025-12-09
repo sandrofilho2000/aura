@@ -2,14 +2,16 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import User
 from django.contrib import admin, messages
-from asaas.models import AfiliadoAsaas
+from asaas.models import AfiliadoAsaas, AsaasConfig
+import requests
+
 
 class AfiliadoAsaasInline(admin.StackedInline):
     model = AfiliadoAsaas
     extra = 0
-    max_num = 1 
+    max_num = 1
     can_delete = False
-    
+
     def has_add_permission(self, request, obj):
         # Só permite adicionar se não existir ainda
         if AfiliadoAsaas.objects.filter(afiliado=obj).exists():
@@ -22,35 +24,82 @@ class AfiliadoAsaasInline(admin.StackedInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        (_('Informações Pessoais'), {'fields': ('first_name', 'last_name', 'username', 'cpf_cnpj', 'birth_date', 'company_type', 'income_value')}),
-        (_('Contato'), {'fields': ('phone', 'mobile_phone', 'site')}),
-        (_('Endereço'), {'fields': ('address', 'address_number', 'complement', 'province', 'postal_code')}),
-        (_('Comissão'), {'fields': ('fixedValue', 'percentualValue')}),
-        (_('Permissões'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        (_('Datas Importantes'), {'fields': ('last_login', 'date_joined')}),
+        (None, {"fields": ("email", "password")}),
+        (
+            _("Informações Pessoais"),
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "username",
+                    "cpf_cnpj",
+                    "birth_date",
+                    "company_type",
+                    "income_value",
+                )
+            },
+        ),
+        (_("Contato"), {"fields": ("phone", "mobile_phone", "site")}),
+        (
+            _("Endereço"),
+            {
+                "fields": (
+                    "address",
+                    "address_number",
+                    "complement",
+                    "province",
+                    "postal_code",
+                )
+            },
+        ),
+        (_("Comissão"), {"fields": ("fixedValue", "percentualValue")}),
+        (
+            _("Permissões"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        (_("Datas Importantes"), {"fields": ("last_login", "date_joined")}),
     )
     inlines = [AfiliadoAsaasInline]
-    filter_horizontal = ('groups', 'user_permissions', 'groups')
+    filter_horizontal = ("groups", "user_permissions", "groups")
 
-    list_display = ('email', 'username', 'first_name', 'last_name', 'is_staff', 'get_groups')
-    search_fields = ('email', 'username', 'first_name', 'last_name', 'cpf_cnpj')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    ordering = ('email', 'username', 'date_joined')
+    list_display = (
+        "email",
+        "username",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "get_groups",
+    )
+    search_fields = ("email", "username", "first_name", "last_name", "cpf_cnpj")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    ordering = ("email", "username", "date_joined")
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'birth_date'),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "password1", "password2", "birth_date"),
+            },
+        ),
     )
 
     def get_groups(self, obj):
         return ", ".join([profile.name for profile in obj.groups.all()])
-    get_groups.short_description = _('Perfis')
+
+    get_groups.short_description = _("Perfis")
 
     # ---------------------------------------------------------------------
     # 🛑 BLOQUEAR EXCLUSÃO DE SI MESMO E DE SUPERUSUÁRIOS
@@ -100,18 +149,26 @@ class UserAdmin(BaseUserAdmin):
             return super().get_readonly_fields(request, obj)
 
         campos_restritos = [
-            'fixedValue', 'cpf_cnpj', 'username', 'percentualValue',
-            'last_login', 'date_joined',
-            'is_active', 'is_staff', 'is_superuser'
+            "fixedValue",
+            "cpf_cnpj",
+            "username",
+            "percentualValue",
+            "last_login",
+            "date_joined",
+            "is_active",
+            "is_staff",
+            "is_superuser",
         ]
 
-        return list(set(super().get_readonly_fields(request, obj)) | set(campos_restritos))
+        return list(
+            set(super().get_readonly_fields(request, obj)) | set(campos_restritos)
+        )
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = list(super().get_fieldsets(request, obj))
 
         if not request.user.is_superuser:
-            fieldsets = [fs for fs in fieldsets if fs[0] != _('Permissões')]
+            fieldsets = [fs for fs in fieldsets if fs[0] != _("Permissões")]
 
         return fieldsets
 
@@ -124,14 +181,14 @@ class UserAdmin(BaseUserAdmin):
         return qs.filter(pk=request.user.pk)
 
     def get_inline_instances(self, request, obj=None):
-        # Quando criando um novo usuário, obj é None → inline aparece normalmente
-        inline_instances = super().get_inline_instances(request, obj)
+        integracao_existe = AsaasConfig.objects.filter(status="conectado").exists()
 
-        # Se estou editando meu próprio usuário, removo o inline específico
-        if obj and obj.pk == request.user.pk:
-            return [
-                inline for inline in inline_instances
-                if not isinstance(inline, AfiliadoAsaasInline)
-            ]
+        inline_instances = []
+        for inline_class in self.inlines:
+            # Se este inline for o AfiliadoAsaasInline e NÃO houver integração → não adiciona
+            if inline_class is AfiliadoAsaasInline and not integracao_existe:
+                continue
+
+            inline_instances.append(inline_class(self.model, self.admin_site))
 
         return inline_instances

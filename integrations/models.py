@@ -9,4 +9,8 @@ class Integration(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return "Integrações do Sistema"
+        return ""
+    
+    class Meta:
+        verbose_name="Integrações do Sistema"
+        verbose_name_plural="Integrações do Sistema"

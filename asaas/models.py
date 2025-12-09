@@ -3,6 +3,16 @@ import requests
 
 
 class AfiliadoAsaas(models.Model):
+    STATUS_CHOICES = [
+        ("nao_configurado", "Não configurado"),
+        ("aguardando_teste", "Aguardando teste"),
+        ("conectado", "Conectado"),
+        ("token_invalido", "Token inválido"),
+        ("erro_de_conexao", "Erro de conexão"),
+        ("api_indisponivel", "API indisponível"),
+        ("erro_desconhecido", "Erro desconhecido"),
+    ]
+
     afiliado = models.ForeignKey(
         "account.User", on_delete=models.CASCADE, related_name="asaas_config"
     )
@@ -12,11 +22,68 @@ class AfiliadoAsaas(models.Model):
 
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
+    
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default="não_configurado",
+        editable=False,
+    )
 
     class Meta:
         unique_together = ("afiliado",)
         verbose_name = "Configuração Asaas do Afiliado"
         verbose_name_plural = "Configuração Asaas dos Afiliados"
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # evita requisições duplicadas
+        self._status_checked = False
+        self.check_status()
+        
+    def check_status(self):
+        """ if self.externalId:
+            return """
+
+        self._status_checked = True
+
+        asaas_config = AsaasConfig.objects.filter(status="conectado").first()
+        if not asaas_config.token_api:
+            return 
+        
+        if not self.externalId:
+            self.status = "não_configurado"
+            return
+
+        url = f"https://api-sandbox.asaas.com/v3/accounts/{self.externalId}"
+
+        try:
+            response = requests.get(
+                url,
+                headers={
+                    "accept": "application/json",
+                    "access_token": asaas_config.token_api,
+                },
+                timeout=5,
+            )
+
+            if response.status_code == 200:
+                self.status = "conectado"
+            elif response.status_code == 401:
+                self.status = "token_invalido"
+            elif response.status_code == 503:
+                self.status = "api_indisponivel"
+            else:
+                self.status = "erro_de_conexao"
+
+        except requests.exceptions.RequestException:
+            self.status = "erro_de_conexao"
+
+        # grava o novo status caso tenha mudado
+        super().save(update_fields=["status"])
+
+
 
     def __str__(self):
         if self.afiliado.first_name:

@@ -70,8 +70,9 @@ class AsaasConfigInline(admin.StackedInline):
 
 # ADMIN que realmente controla o modelo AsaasConfig
 class AsaasConfigAdmin(admin.ModelAdmin):
-
+    readonly_fields = ["status_badge"]
     # Redireciona a list view (ex: /admin/asaas/asaasconfig/)
+    
     def changelist_view(self, request, extra_context=None):
         return redirect("/admin/integrations/integration/1/change/")
 
@@ -91,5 +92,40 @@ class AsaasConfigAdmin(admin.ModelAdmin):
 
         return True
 
+    def status_badge(self, instance):
+        if not instance or not instance.status:
+            return "-"
+
+        css_class = (
+            "badge badge-" +
+            instance.status.replace("_", "-")
+            .replace("ã", "a")
+            .replace("í", "i")
+        )
+
+        return format_html(
+            '<span class="{}">{}</span>',
+            css_class,
+            instance.get_status_display()
+        )
+
+    status_badge.short_description = "Status"
+
+    # Campos exibidos
+    def get_fields(self, request, obj=None):
+        if not obj:
+            return ["externalId"]
+
+        instance = getattr(obj, "asaas_config", None)
+
+        base = ["status_badge"]
+
+        if instance:
+            if instance.status == "conectado":
+                return base
+            else:
+                return ["externalId"] + base
+
+        return ["externalId"]
 
 admin.site.register(AsaasConfig, AsaasConfigAdmin)
